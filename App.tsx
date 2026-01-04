@@ -14,7 +14,12 @@ const App: React.FC = () => {
 
   const handleAiRefresh = async () => {
     setIsLoadingAi(true);
-    const analysis = await getAIExplanation(activeConcept.title, activeConcept.description);
+    const analysis = await getAIExplanation(
+      activeConcept.title, 
+      activeConcept.description,
+      activeConcept.tradingMethod,
+      activeConcept.tradingMethodEn
+    );
     setAiAnalysis(analysis || '');
     setIsLoadingAi(false);
   };

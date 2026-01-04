@@ -7,7 +7,8 @@ export enum ConceptId {
   BREAKER = 'breaker',
   OTE = 'ote',
   AMD = 'amd',
-  KILL_ZONES = 'kill_zones'
+  KILL_ZONES = 'kill_zones',
+  DOM_FILTER = 'dom_filter'
 }
 
 export interface Candle {
@@ -19,7 +20,7 @@ export interface Candle {
 }
 
 export interface SMCZone {
-  type: 'fvg' | 'ob' | 'breaker' | 'liquidity';
+  type: 'fvg' | 'ob' | 'breaker' | 'liquidity' | 'line';
   startIndex: number;
   endIndex: number;
   topPrice: number;

@@ -28,10 +28,36 @@ const CandlestickChart: React.FC<CandlestickChartProps> = ({ candles, zones }) =
         {/* Draw Zones First */}
         {zones.map((zone, idx) => {
           const x = zone.startIndex * (candleWidth + candleGap) + 20;
+          const totalWidth = candles.length * (candleWidth + candleGap) + 60;
           const width = (zone.endIndex - zone.startIndex + 1) * (candleWidth + candleGap) - candleGap + 40;
           const top = getY(zone.topPrice);
           const bottom = getY(zone.bottomPrice);
           const height = Math.abs(bottom - top);
+
+          if (zone.type === 'line') {
+            return (
+              <g key={`zone-${idx}`}>
+                <line
+                  x1={0}
+                  y1={(top + bottom) / 2}
+                  x2={totalWidth}
+                  y2={(top + bottom) / 2}
+                  stroke={zone.color || 'white'}
+                  strokeWidth="2"
+                  strokeDasharray="8 4"
+                />
+                <text
+                  x={10}
+                  y={(top + bottom) / 2 - 10}
+                  fill="white"
+                  fontSize="12"
+                  className="font-bold opacity-90"
+                >
+                  {zone.label}
+                </text>
+              </g>
+            );
+          }
 
           return (
             <g key={`zone-${idx}`}>
@@ -41,7 +67,7 @@ const CandlestickChart: React.FC<CandlestickChartProps> = ({ candles, zones }) =
                 width={width}
                 height={height}
                 fill={zone.color || 'rgba(255, 255, 255, 0.1)'}
-                stroke={zone.color?.replace('0.2', '0.5') || 'white'}
+                stroke={zone.color?.replace('0.2', '0.5').replace('0.1', '0.3') || 'white'}
                 strokeWidth="1"
                 strokeDasharray="4"
               />
@@ -55,7 +81,6 @@ const CandlestickChart: React.FC<CandlestickChartProps> = ({ candles, zones }) =
               >
                 {zone.label}
               </text>
-              {/* Midpoint line for FVG */}
               {zone.type === 'fvg' && (
                 <line
                   x1={x - 20}
@@ -80,14 +105,13 @@ const CandlestickChart: React.FC<CandlestickChartProps> = ({ candles, zones }) =
           const openY = getY(candle.open);
           const closeY = getY(candle.close);
           const bodyTop = Math.min(openY, closeY);
-          const bodyHeight = Math.max(Math.abs(openY - closeY), 2); // Ensure visible body
+          const bodyHeight = Math.max(Math.abs(openY - closeY), 2);
 
           const isBullish = candle.type === 'bullish';
           const color = isBullish ? '#10b981' : '#ef4444';
 
           return (
             <g key={`candle-${idx}`} className="transition-all duration-300 hover:opacity-80 cursor-pointer">
-              {/* Wick */}
               <line
                 x1={x + candleWidth / 2}
                 y1={highY}
@@ -96,7 +120,6 @@ const CandlestickChart: React.FC<CandlestickChartProps> = ({ candles, zones }) =
                 stroke={color}
                 strokeWidth="2"
               />
-              {/* Body */}
               <rect
                 x={x}
                 y={bodyTop}
@@ -106,14 +129,12 @@ const CandlestickChart: React.FC<CandlestickChartProps> = ({ candles, zones }) =
                 stroke={color}
                 strokeWidth="2"
               />
-              {/* Candle Label */}
               <text
                 x={x + candleWidth / 2}
                 y={lowY + 20}
-                fill="slate-400"
+                fill="#94a3b8"
                 fontSize="10"
                 textAnchor="middle"
-                className="fill-slate-400"
               >
                 K{idx + 1}
               </text>
